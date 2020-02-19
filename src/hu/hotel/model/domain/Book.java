@@ -1,5 +1,11 @@
 package hu.hotel.model.domain;
 
+import hu.hotel.model.service.DayUtil;
+import hu.hotel.model.service.PriceCalculator;
+
+import java.util.Map;
+import java.util.TreeMap;
+
 public class Book {
 
     private final int id;
@@ -46,5 +52,23 @@ public class Book {
 
     public String getName() {
         return name;
+    }
+
+    public Integer getDuration() {
+        return departure - arrival;
+    }
+
+    public int getTotalPrice() {
+        return PriceCalculator.getTotalPrice(this);
+    }
+
+    public Map<Integer, Integer> getGuestNightMap() {
+        Map<Integer, Integer> guestNights = new TreeMap<>();
+        for(int day = arrival;  day < departure; day++) {
+            int key = DayUtil.getMonth(day);
+            int value = guestNights.containsKey(key) ? guestNights.get(key) + numberOfGuest : numberOfGuest;
+            guestNights.put(key, value);
+        }
+        return guestNights;
     }
 }
