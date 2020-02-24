@@ -68,5 +68,22 @@ public class HotelService {
         return totalGuestNights;
     }
 
+    /**
+     * 5. feladat.
+     */
+
+    public long getFreeRoomsCountForDayInterval(int arrival, int stay) {
+        int departure = arrival + stay;
+        return 27L - getOccupiedRoomCount(arrival, departure);
+    }
+
+    private long getOccupiedRoomCount(int arrival, int departure) {
+        return bookings.stream()
+                .filter(book -> book.getDeparture() >= arrival && book.getArrival() < departure)
+                .map(Book::getRoom)
+                .distinct()
+                .count();
+    }
+
 
 }

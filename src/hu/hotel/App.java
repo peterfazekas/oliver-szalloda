@@ -1,25 +1,21 @@
 package hu.hotel;
 
 import hu.hotel.controller.HotelService;
-import hu.hotel.model.service.DataApi;
-import hu.hotel.model.service.DataParser;
-import hu.hotel.model.service.FileReader;
-import hu.hotel.model.service.FileWriter;
+import hu.hotel.model.service.*;
 
-import java.text.DecimalFormat;
-import java.text.FieldPosition;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
+import java.util.Scanner;
 
 public class App {
 
     private final HotelService hotelService;
     private final FileWriter fileWriter;
+    private final Console console;
 
     private App() {
         DataApi dataApi = new DataApi(new FileReader(), new DataParser());
         hotelService = new HotelService(dataApi.getBookings("pitypang.txt"));
         fileWriter = new FileWriter("bevetel.txt");
+        console = new Console(new Scanner(System.in));
     }
 
     public static void main(String[] args) {
@@ -34,5 +30,11 @@ public class App {
         System.out.println("A szálloda éves bevétele: " + hotelService.getTotalPrice());
         System.out.println("4. feladat: ");
         System.out.println(hotelService.getTotalGuestNightsDetails());
+        System.out.println("5. feladat:");
+        System.out.print("Kérem adja meg az érkezési nap sorszámát [1-364]: ");
+        int arrival = console.readInt();
+        System.out.print("Kérem adja meg az eltöltendő éjszakák számát [>0]: ");
+        int stay = console.readInt();
+        System.out.println("A rendelkezésre álló szabad szobák száma: " + hotelService.getFreeRoomsCountForDayInterval(arrival, stay));
     }
 }
